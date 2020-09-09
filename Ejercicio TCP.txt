@@ -1,0 +1,20 @@
+Cuando se envia un paquete IP, ¿cómo se obtiene la dirección Ethernet?
+con la tabla ARP?
+
+Cuando se envía un paquete, ¿cómo sabe IP cuál de las interfaces de red (de la capa inferior) debe usar?
+
+IP looks it up in the route table using a search key of the IP network number extracted from the IP destination address.
+The route table contains one row for each route. The primary columns in the route table are: IP network number, 
+direct/indirect flag, router IP address, and interface number. This table is referred to by IP for each outgoing IP 
+packet. On most computers the route table can be modified with the "route" command. The content of the route table is 
+defined by the network manager, because the network manager assigns the IP addresses to the computers.
+
+
+¿Cómo hace una computadora "cliente" para comunicarse con una computadora "servidor"?
+
+
+¿Por qué existe TCP y UDP?
+
+
+¿Qué es una aplicación de red?
+
