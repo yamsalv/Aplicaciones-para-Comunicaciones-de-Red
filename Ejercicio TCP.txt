@@ -1,20 +1,45 @@
 • Cuando se envia un paquete IP, ¿cómo se obtiene la dirección Ethernet?
-con la tabla ARP?
+
+El ARP (Protocolo de resolución de direcciones) se utiliza para traducir direcciones IP a direcciones Ethernet. La traducción se realiza solo para paquetes IP salientes, porque es cuando se crean el encabezado IP y el encabezado Ethernet.
+
+Una trama de Ethernet contiene la dirección de destino, la dirección de origen, el campo de "tipo" y los datos.
+Una dirección Ethernet tiene 6 bytes. Cada dispositivo tiene su propia dirección Ethernet y escucha tramas Ethernet con esa dirección de destino. Todos los dispositivos también escuchan tramas Ethernet con una dirección de destino comodín de "FF-FF-FF-FF-FF-FF" (en hexadecimal), denominada dirección de "broadcast". 
+Ethernet utiliza CSMA / CD (Carrier Sense and Multiple Access with Collision Detection).
+CSMA / CD significa que todos los dispositivos se comunican en un solo medio, que solo uno puede transmitir a la vez, y que todos puedan recibir simultáneamente. 
+Si 2 dispositivos intentan transmitir al mismo tiempo, se detecta una colisión de transmisión y ambos dispositivos esperan un período aleatorio (pero corto) antes de intentar transmitir nuevamente.
+
 
 • Cuando se envía un paquete, ¿cómo sabe IP cuál de las interfaces de red (de la capa inferior) debe usar?
 
-IP looks it up in the route table using a search key of the IP network number extracted from the IP destination address.
-The route table contains one row for each route. The primary columns in the route table are: IP network number, 
-direct/indirect flag, router IP address, and interface number. This table is referred to by IP for each outgoing IP 
-packet. On most computers the route table can be modified with the "route" command. The content of the route table is 
-defined by the network manager, because the network manager assigns the IP addresses to the computers.
+IP lo busca en la tabla de rutas utilizando una clave de búsqueda del número de red IP extraído de la dirección IP de destino.
+La tabla de rutas contiene una fila para cada ruta. Las columnas principales de la tabla de rutas son: número de red IP, indicador directo / indirecto, dirección IP del enrutador y número de interfaz. Se hace referencia a esta tabla por IP para cada paquete IP saliente. En la mayoría de las computadoras, la tabla de rutas se puede modificar con el comando "route". El contenido de la tabla de rutas es definido por el administrador de la red, porque el administrador de la red asigna las direcciones IP a las computadoras.
 
 
 • ¿Cómo hace una computadora "cliente" para comunicarse con una computadora "servidor"?
 
+Una aplicación que ofrece servicio (el servidor) espera que los mensajes entren en un puerto específico dedicado a ese servicio. El servidor espera pacientemente a que cualquier cliente solicite el servicio.
+
+Por ejemplo, si un cliente SNMP desea servicio, envía su solicitud al puerto número 161 de UDP en la computadora de destino.
+Cuando una aplicación envía datos a través de UDP, llega al otro extremo como una sola unidad. Esto significa que si una aplicación hace 5 escrituras en el puerto UDP, la aplicación en el extremo lejano hará 5 lecturas desde el puerto UDP. También, el tamaño de cada escritura coincide con el tamaño de cada lectura. UDP conserva el límite del mensaje definido por la aplicación. Nunca une dos mensajes de aplicaciones juntos, o divide un solo mensaje de solicitud en partes.
+
 
 • ¿Por qué existe TCP y UDP?
 
+UDP es un servicio de entrega de datagramas sin conexión que no garantiza la entrega. UDP no mantiene una conexión de extremo a extremo con el módulo UDP remoto; simplemente empuja el datagrama a la red y acepta datagramas entrantes fuera la red.
+
+TCP proporciona un servicio diferente al de UDP. TCP ofrece un flujo de bytes orientado a la conexión, en lugar de un servicio de entrega de datagramas sin conexión. TCP garantiza la entrega, mientras que UDP no.
+TCP es utilizado por aplicaciones de red que requieren entrega garantizada y no pueden molestarse en hacer tiempos de espera y retransmisiones.
+
+La respuesta entonces es porque prestan diferentes servicios. La mayoría de las aplicaciones se implementan para usar solo una u otra. Usted, el programador, elige el protocolo que mejor se adapte a sus necesidades. Si necesita un servicio de entrega de flujo confiable, TCP podría ser el mejor. Si necesita un servicio de datagramas, UDP podría ser lo mejor. Si necesita eficiencia en circuitos de largo recorrido, TCP podría ser el mejor. Si necesita eficiencia en redes rápidas con latencia corta, UDP podría ser lo mejor. Si sus necesidades no caen bien en estas categorías, entonces la "mejor" opción no está clara. Sin embargo, las aplicaciones pueden compensar las deficiencias en la elección.
+Por ejemplo, si elige UDP y necesita confiabilidad, la aplicación debe proporcionar confiabilidad. Si usted elige TCP y necesita un servicio orientado a registros, entonces la aplicación debe insertar marcadores en el flujo de bytes para delimitar registros.
+
 
 • ¿Qué es una aplicación de red?
+
+Son programas que corren entre diferentes computadoras conectadas juntas en una red, y son seleccionadas de acuerdo al tipo de trabajo que necesita.
+
+Similar a UDP, las aplicaciones de red se conectan a puertos TCP. Los números de puerto bien definidos están dedicados a aplicaciones. Por ejemplo, el servidor TELNET usa el puerto número 23. El cliente TELNET puede encontrar el servidor simplemente al conectarse al puerto 23 de TCP en la computadora especificada.
+Cuando la aplicación comienza a usar TCP por primera vez, el módulo TCP en la computadora del cliente y el módulo TCP en la computadora del servidor comienza a comunicarse entre sí. Estos dos módulos TCP de punto final contienen información de estado que define un circuito virtual. Este circuito virtual consume recursos en ambos puntos finales de TCP. El circuito virtual es completamente dúplex; los datos pueden ir en ambas direcciones simultáneamente. La aplicación escribe datos en el puerto TCP, los datos atraviesan la red y la aplicación lo lee en el otro extremo.
+
+Hay demasiadas aplicaciones de red para enumerarlas. El número crece continuamente. Algunas de las aplicaciones existen desde el inicio de la tecnología de Internet: TELNET y FTP. Otros son relativamente nuevos como: X-Windows y SNMP.
 
