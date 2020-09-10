@@ -1,9 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 import socket
-from random import randint
-from os import system
 
 
 HOST = input("¿A qué dirección te deseas conectar?\n")
@@ -39,7 +34,6 @@ def imprimirTablero(tablero):
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
     TCPClientSocket.connect((HOST, PORT))
-    system('clear')
     print("Se ha establecido la conexión\n")
     while juego:
         data = TCPClientSocket.recv(buffer_size).decode()
@@ -48,7 +42,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
             print(data[0])
             respuestaDificultad = input()
             TCPClientSocket.sendall("{}-{}-{}-{}".format("", "", respuestaDificultad, "e").encode())
-            system('clear')
         elif len(data[0]) == 0 and len(data[1]) > 0 and len(data[2]) > 0 and len(data[3]) > 0 and len(data[4]) == 0:
             system('clear')
             print(data[1])
@@ -66,7 +59,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
             columna = input("Columna: ")
             TCPClientSocket.sendall("{}-{}-{}-{}".format(fila, columna, respuestaDificultad, "j").encode())
         elif len(data[0]) == 0 and len(data[1]) == 0 and len(data[2]) > 0 and len(data[3]) > 0 and len(data[4]) == 0:
-            system('clear')
             if respuestaDificultad.lower() == 'p':
                 tablero = hacerTablero(data[3], 9)
             elif respuestaDificultad.lower() == 'a':
@@ -79,7 +71,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
             columna = input("Columna: ")
             TCPClientSocket.sendall("{}-{}-{}-{}".format(fila, columna, respuestaDificultad, "j").encode())
         elif len(data[0]) == 0 and len(data[1]) == 0 and len(data[2]) == 0 and len(data[3]) > 0 and len(data[4]) > 0:
-            system('clear')
             if respuestaDificultad.lower() == 'p':
                 tablero = hacerTablero(data[3], 9)
             else:
@@ -88,7 +79,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
             print("¡Has ganado!\nTiempo de juego: " + data[4])
             juego = False
         else:
-            system('clear')
             if respuestaDificultad.lower() == 'p':
                 tablero = hacerTablero(data[3], 9)
             else:
